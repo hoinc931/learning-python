@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html>
+    {% include 'common/header.html' %}
+    <body>
+        
+        <div class="container">
+            <h1 class="text-center">Danh sách danh mục</h1>
+
+            <table class="table table-striped">
+                <thead class="fw-bold">
+                    <tr>
+                        <td>
+                            ID
+                        </td>
+                        <td>
+                            Name
+                        </td>
+                        <td>
+                            Actions
+                        </td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for cate in list_categories %}
+                        <tr>
+                            <td>{{cate.category_id}}</td>
+                            <td>{{cate.name}}</td>
+                            <td><a href="/products/{{cate.category_id}}" class="btn btn-primary">Detail<a/></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

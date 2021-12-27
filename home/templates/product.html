@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    {% include 'common/header.html' %}
+
+    <body>
+        
+        <div class="container mt-3">
+            <h1 class="text-center">{{category.name}}</h1>
+            
+            <table class="table table-striped">
+                <thead class="fw-bold">
+                    <tr>
+                        <td>ID</td>
+                        <td>Name</td>
+                        <td>Image</td>
+                        <td>Description</td>
+                        <td>ID Category</td>
+                        <td>Actions</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for pro in list_products %}
+                        <tr>
+                            <td>{{pro.product_id}}</td>
+                            <td>{{pro.name}}</td>
+                            <td>
+                                <img src="home/media/{{pro.image}}" width="80" />
+                            </td>
+                            <td>{{pro.description}}</td>
+                            <td>{{pro.category_id}}</td>
+                            <td>
+                                <a href="#" class="btn btn-warning">Update</a>
+                                <a href="#" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
