@@ -4,7 +4,7 @@ from .serializers import CategorySerializer, CoursesSerializer, LessonsSerialize
 from .paginator import BasePagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from django.http import Http404
+from django.http import Http404, JsonResponse
 
 
 # Create your views here.
@@ -12,16 +12,40 @@ class CategoryViewSet(viewsets.ViewSet, generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
-    @action(methods=['post'], detail=False, url_path='categories')
+    @action(methods=['post'], detail=False, url_path='create')
     def create_cate(self, request, *args, **kwargs):
+        serializer = CategorySerializer(data=request.data)
+        name = request.data.get('name')
+        get_category = Category.objects.filter(name=name)
+
+        # print("this is name: " + str(len(name)))
+        if len(name) <= 5:
+            return Response({"message": "Category name must be more 5 characters.", "data": None}, status=status.HTTP_411_LENGTH_REQUIRED)
+
+        if get_category.exists():
+            return Response({"message": "Category was existed.", "data": None}, status=status.HTTP_400_BAD_REQUEST)
+        # print("this is get: " + str(get_category.exists()))
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Category was created", "data": str(get_category)}, status=status.HTTP_201_CREATED)
+
+        return Response({"message": "Category was not created", "data": None}, status=status.HTTP_404_NOT_FOUND)
+
+
+# Create Category
+class CreateCategoryViewSet(viewsets.ViewSet, generics.CreateAPIView):
+    model = Category
+    serializer_class = CategorySerializer
+
+    def create(self, request, *args, **kwargs):
         serializer = CategorySerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()
+            return JsonResponse({"message": "Category was created", "data": str(serializer)}, status=status.HTTP_201_CREATED)
 
-            return Response({"message": "created"}, status=status.HTTP_201_CREATED)
-
-        return Response({"message": "data is not must"}, status=status.HTTP_404_NOT_FOUND)
+        return JsonResponse({"message": "Category was not created", "data": None}, status=status.HTTP_404_NOT_FOUND)
 
 
 class CoursesViewSet(viewsets.ViewSet, generics.ListAPIView):
